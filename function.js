@@ -2,7 +2,7 @@ import { ethers } from "ethers"
 import { general } from "./settings.js"
 import config from "./config.json" assert {type: "json"}
 import abi from "./abi.json" assert {type: "json"}
-import { delayTx, logger,amountConsole } from "./helpers.js"
+import { delayTx, logger,amountConsole, gasPriceL1 } from "./helpers.js"
 
 
 
@@ -10,6 +10,10 @@ import { delayTx, logger,amountConsole } from "./helpers.js"
 
 export async function deposit(key, tokenName){
     try{
+        let gas
+        do{
+            gas = await gasPriceL1()
+        }while(general.gasMax < Number(gas))
         const provider = new ethers.JsonRpcProvider(general.ethereum)
         const wallet = new ethers.Wallet(key, provider)
         const depositContract = new ethers.Contract(config.depositAddress[tokenName], abi.depositContract, provider)

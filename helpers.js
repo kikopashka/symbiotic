@@ -7,6 +7,7 @@ export async function gasPriceL1(){
   const provider = new ethers.JsonRpcProvider(general.ethereum)
   const gasPrice = (await provider.getFeeData()).gasPrice;
   const gwei = ethers.formatUnits(gasPrice, 'gwei');
+  await delay(10000)
   return gwei;
   } catch(e){
     await gasPriceL1();
